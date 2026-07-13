@@ -64,9 +64,8 @@ AUDIT_ROLES = {"admin_securite", "admin"}
 ALERT_ROLES = AUDIT_ROLES
 
 
-# ====================== INITIALISATION MONGODB ======================
+# ====================== INITIALISATION MONGODB (IMPORTANT) ======================
 def initialize_database():
-    """Initialisation à exécuter à chaque démarrage (même avec gunicorn)"""
     print("=== Initialisation de la base MongoDB ===")
     try:
         _init_users()
@@ -82,7 +81,6 @@ def initialize_database():
         print(f"[INIT WARNING] Impossible de créer/synchroniser le compte admin : {exc}")
 
 
-# ====================== FONCTIONS EXISTANTES ======================
 def _safe_find(collection_name, query=None, projection=None):
     try:
         return list(get_collection(collection_name).find(query or {}, projection or {"_id": 0}))
@@ -147,13 +145,13 @@ def _init_logs():
     print(f"[INIT] {len(docs)} entrées de log importées dans 'access_logs'.")
 
 
-# ... (le reste du code reste IDENTIQUE : current_user, login_page, etc.)
+# ====================== LE RESTE DE TON CODE (routes, fonctions, etc.) ======================
+# Colle ici tout le reste de ton code original (current_user, login_page, activate_account_page, etc.)
 
-# ====================== APPEL DE L'INITIALISATION ======================
+# ... (je ne le recopie pas tout pour ne pas allonger, mais tu dois le garder)
+
+# ====================== APPEL INITIALISATION + LANCEMENT ======================
 initialize_database()
-
-# ====================== ROUTES (le reste du fichier) ======================
-# (Copie-colle tout le reste de ton code à partir de current_user() jusqu'à la fin)
 
 if __name__ == "__main__":
     print("=== Démarrage du serveur Flask en mode local ===")
