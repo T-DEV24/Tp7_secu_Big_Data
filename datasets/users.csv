@@ -1,0 +1,8 @@
+user_id,name,role,department,mfa_enabled,clearance
+u001,Dr Ali,medecin,cardiologie,True,medical
+u002,Mme Houda,secretaire,accueil,True,admin
+u003,Anis,infirmier,urgence,True,medical_limited
+u004,Jamal,infirmier,pediatrie,False,medical_limited
+u005,Admin Sec,admin_securite,it,True,security
+u006,Visiteur,patient,public,False,self
+admin,Administrateur,admin,direction,True,admin

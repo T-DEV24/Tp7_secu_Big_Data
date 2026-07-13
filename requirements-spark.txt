@@ -1,0 +1,3 @@
+# Dépendances additionnelles pour exécuter les jobs Spark (spark_jobs/) et le
+# notebook Kafka/Spark en local. Non nécessaires pour héberger le dashboard.
+pyspark==3.0.3

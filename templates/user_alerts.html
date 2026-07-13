@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block title %}Alertes utilisateur {{ user_id }}{% endblock %}
+{% block content %}
+<h1>Historique des alertes de {{ user_id }}</h1>
+<div class="simple-card table-card">
+  <div class="table-responsive"><table class="table table-striped"><thead><tr><th>Horodatage</th><th>Département</th><th>Action</th><th>Score</th><th>Niveau</th><th>Raisons</th></tr></thead><tbody>{% for alert in alerts %}<tr><td>{{ alert.timestamp }}</td><td>{{ alert.department }}</td><td>{{ alert.action }}</td><td>{{ alert.risk_score }}</td><td>{{ alert.risk_level }}</td><td>{{ alert.risk_reasons }}</td></tr>{% else %}<tr><td colspan="6" class="text-muted">Aucune alerte pour cet utilisateur.</td></tr>{% endfor %}</tbody></table></div>
+</div>
+{% endblock %}

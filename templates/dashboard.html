@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard sécurité{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+  <h1>Dashboard de supervision des accès</h1>
+  <p class="text-muted">Bienvenue {{ current_user.name }}. Les indicateurs ci-dessous proviennent des alertes Kafka → Spark → MongoDB.</p>
+</div>
+
+<div id="dashboardError" class="alert alert-danger d-none" role="alert"></div>
+
+<div class="row g-3 mb-4" aria-label="Indicateurs clés de sécurité">
+  <div class="col-md-6 col-xl"><div class="simple-card kpi-card border-start border-danger"><span>Alertes 24h</span><strong id="kpi24h">0</strong></div></div>
+  <div class="col-md-6 col-xl"><div class="simple-card kpi-card border-start border-warning"><span>Alertes 7j</span><strong id="kpi7d">0</strong></div></div>
+  <div class="col-md-6 col-xl"><div class="simple-card kpi-card border-start border-primary"><span>Alertes 30j</span><strong id="kpi30d">0</strong></div></div>
+  <div class="col-md-6 col-xl"><div class="simple-card kpi-card border-start border-secondary"><span>Score moyen</span><strong id="kpiAverage">0</strong></div></div>
+  <div class="col-md-12 col-xl"><div class="simple-card kpi-card border-start border-danger"><span>Utilisateur prioritaire</span><strong id="kpiTopUser">Aucun</strong></div></div>
+</div>
+
+<div class="simple-card mb-4">
+  <div class="row g-3 align-items-end">
+    <div class="col-md-4"><label class="form-label" for="periodFilter">Période</label><select id="periodFilter" class="form-select"><option value="24h">24h</option><option value="7d">7 jours</option><option value="30d" selected>30 jours</option><option value="all">Tout</option></select></div>
+    <div class="col-md-4"><label class="form-label" for="riskFilter">Niveau de risque</label><select id="riskFilter" class="form-select"><option value="">Tous</option><option value="faible">Faible</option><option value="moyen">Moyen</option><option value="élevé">Élevé</option></select></div>
+    <div class="col-md-4"><label class="form-label" for="departmentFilter">Département</label><select id="departmentFilter" class="form-select"><option value="">Tous</option>{% for department in departments %}<option value="{{ department }}">{{ department }}</option>{% endfor %}</select></div>
+  </div>
+</div>
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-6"><div class="simple-card chart-card"><h2>Alertes par heure</h2><canvas id="alertsByHourChart" aria-label="Histogramme des alertes par heure" role="img"></canvas></div></div>
+  <div class="col-lg-6"><div class="simple-card chart-card"><h2>Alertes par action</h2><canvas id="alertsByActionChart" aria-label="Barres horizontales des alertes par action" role="img"></canvas></div></div>
+  <div class="col-lg-4"><div class="simple-card chart-card"><h2>Répartition par gravité</h2><canvas id="riskLevelChart" aria-label="Donut des alertes par niveau de risque" role="img"></canvas></div></div>
+  <div class="col-lg-8"><div class="simple-card chart-card"><h2>Tendance sur 30 jours</h2><canvas id="alertsByDayChart" aria-label="Courbe des alertes quotidiennes" role="img"></canvas></div></div>
+  <div class="col-12"><div class="simple-card chart-card"><h2>Alertes par département</h2><canvas id="departmentChart" aria-label="Barres des alertes par département" role="img"></canvas></div></div>
+</div>
+
+<div class="simple-card table-card">
+  <div class="d-flex justify-content-between align-items-center mb-3"><h2 class="mb-0">Top 10 utilisateurs à risque</h2><div class="btn-group"><a class="btn btn-outline-primary btn-sm" href="{{ url_for('export_top_users_csv') }}">Exporter le top 10 CSV</a><a class="btn btn-outline-secondary btn-sm" href="{{ url_for('export_alerts_csv') }}">Exporter les alertes CSV</a></div></div>
+  <div class="table-responsive"><table class="table table-hover align-middle" id="topUsersTable"><thead><tr><th>Utilisateur</th><th>Score cumulé</th><th>Alertes</th><th>Dernière raison</th><th>Niveau dominant</th><th>Détail</th></tr></thead><tbody><tr><td colspan="6" class="text-muted">Chargement des données...</td></tr></tbody></table></div>
+</div>
+<script src="{{ url_for('static', filename='js/dashboard.js') }}" defer></script>
+{% endblock %}

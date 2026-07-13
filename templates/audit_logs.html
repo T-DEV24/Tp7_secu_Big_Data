@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Audit{% endblock %}
+
+{% block content %}
+<div class="page-heading d-flex justify-content-between align-items-start gap-3">
+  <div>
+    <h1>Logs d'audit</h1>
+    <p class="text-muted">Historique des décisions d'accès.</p>
+  </div>
+  <a class="btn btn-outline-primary" href="{{ url_for('export_audit_csv') }}">Exporter CSV</a>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="simple-card mb-3">
+      <input class="form-control" data-filter="auditTable" placeholder="Filtrer les logs">
+    </div>
+    <div class="simple-card table-card">
+      <div class="table-responsive">
+        <table id="auditTable" class="table table-sm table-hover align-middle mb-0">
+          <thead><tr><th>Timestamp</th><th>User</th><th>Action</th><th>Resource</th><th>Décision</th><th>Raison</th><th>IP</th></tr></thead>
+          <tbody>
+            {% for l in logs %}
+              <tr>
+                <td>{{ l.timestamp }}</td>
+                <td>{{ l.user_id }}</td>
+                <td>{{ l.action }}</td>
+                <td>{{ l.resource_id }}</td>
+                <td><span class="badge {{ 'text-bg-success' if l.success|string|lower == 'true' else 'text-bg-secondary' }}">{{ 'Autorisé' if l.success|string|lower == 'true' else 'Refusé' }}</span></td>
+                <td>{{ l.reason|default('—') }}</td>
+                <td>{{ l.ip }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <p class="small text-muted mt-2 mb-0">Les 250 entrées les plus récentes sont affichées.</p>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="simple-card">
+      <h2>Refus par utilisateur</h2>
+      <canvas id="denyChart" data-labels='{{ denies_by_user.keys()|list|tojson }}' data-values='{{ denies_by_user.values()|list|tojson }}'></canvas>
+    </div>
+  </div>
+</div>
+{% endblock %}

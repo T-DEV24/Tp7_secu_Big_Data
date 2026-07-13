@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Ressource {{ resource.resource_id }}{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('resources_page') }}" class="btn btn-link px-0">Retour aux ressources</a>
+
+<div class="row g-4">
+  <div class="col-lg-5">
+    <div class="simple-card">
+      <h1>Ressource {{ resource.resource_id }}</h1>
+      <dl class="row mb-0">
+        <dt class="col-sm-5">Patient</dt><dd class="col-sm-7">{{ resource.patient_id }}</dd>
+        <dt class="col-sm-5">Type</dt><dd class="col-sm-7">{{ resource.type }}</dd>
+        <dt class="col-sm-5">Département</dt><dd class="col-sm-7">{{ resource.owner_department }}</dd>
+        <dt class="col-sm-5">Sensibilité</dt><dd class="col-sm-7"><span class="badge sensitivity-{{ resource.sensitivity }}">{{ resource.sensitivity }}</span></dd>
+        <dt class="col-sm-5">MFA requis</dt><dd class="col-sm-7">{{ 'Oui' if resource.sensitivity in ['sensible', 'confidentiel'] else 'Non' }}</dd>
+      </dl>
+      <form method="post" class="mt-3">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn btn-primary w-100">Tester l'accès</button>
+      </form>
+      {% if decision %}
+        <div class="alert {{ 'alert-success' if decision.ok else 'alert-warning' }} mt-3 mb-0">{{ decision.reason }}</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="simple-card table-card">
+      <h2>Historique</h2>
+      <div class="table-responsive">
+        <table class="table table-sm align-middle mb-0">
+          <thead><tr><th>Date</th><th>Utilisateur</th><th>Action</th><th>Décision</th><th>Raison</th></tr></thead>
+          <tbody>
+            {% for log in history %}
+              <tr>
+                <td>{{ log.timestamp }}</td>
+                <td>{{ log.user_id }}</td>
+                <td>{{ log.action }}</td>
+                <td>{{ 'Autorisé' if log.success|string|lower == 'true' else 'Refusé' }}</td>
+                <td>{{ log.reason|default('—') }}</td>
+              </tr>
+            {% else %}
+              <tr><td colspan="5" class="text-muted">Aucun historique pour cette ressource.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block content %}
+<section class="login-page">
+  <div class="simple-card login-card">
+    <h1>Connexion</h1>
+    <p class="text-muted">Accès au système de contrôle hospitalier.</p>
+
+    <form method="post" class="needs-validation" novalidate>
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <div class="mb-3">
+        <label for="user_id" class="form-label">Nom d'utilisateur</label>
+        <input id="user_id" name="user_id" class="form-control" required autofocus placeholder="u001">
+      </div>
+      <div class="mb-3">
+        <label for="password" class="form-label">Mot de passe</label>
+        <input id="password" type="password" name="password" class="form-control" required placeholder="Par défaut : user_id">
+      </div>
+      <button class="btn btn-primary w-100">Se connecter</button>
+    </form>
+    <p class="small text-muted mt-3 mb-0">
+      Première connexion ? Utilisez votre identifiant comme mot de passe :
+      un formulaire d'activation (nouveau mot de passe + email) s'affichera automatiquement.
+    </p>
+  </div>
+</section>
+{% endblock %}
