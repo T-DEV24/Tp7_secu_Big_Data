@@ -11,3 +11,4 @@ pyotp==2.10.0
 pymongo==4.17.0
 pandas==3.0.3
 kafka-python==2.0.2
+requests==2.32.3
